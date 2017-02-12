@@ -17,5 +17,34 @@ public class Main {
         Circle c=new Circle();
         Circle.Point point1=c.new Point(3,4);
 
+
+        // זה ששמתי סוגריים מסולסלים יצרתי אובייקט מסוג מחלקה שיורשת מ  Dog  ואין לה שם
+        Dog d=new Dog(){
+            @Override
+            void bark() {
+                System.out.println("boof ");
+            }
+        };
+        d.bark(); //  boof
+    }
+
+    static Dog trainDog(Dog d ){
+        class TrainDog extends Dog{
+            @Override
+            void bark() {
+                System.out.println("abcdefg....yz");
+            }
+        }
+        //יצרתי כלב אחר עם אותו שם
+        TrainDog trainDog=new TrainDog();
+        trainDog.name=d.name;
+        return trainDog;
+    }
+}
+
+class Dog{
+    String name;
+    void bark(){
+        System.out.println("waf"+name);
     }
 }

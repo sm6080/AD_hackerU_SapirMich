@@ -65,4 +65,12 @@ public class Circle {
     public String toString() {
         return "radius"+radius+"center:"+center;
     }
+
+    public Point getCenter() {
+        return center;
+    }
+
+    public void setCenter(Point center) {
+        this.center = center;
+    }
 }
