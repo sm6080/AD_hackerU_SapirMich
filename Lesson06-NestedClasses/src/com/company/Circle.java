@@ -2,6 +2,7 @@ package com.company;
 
 /**
  * Created by Sapir Michaeli on 12.02.2017.
+ * HGHGH
  */
 public class Circle {
     private Point center;
