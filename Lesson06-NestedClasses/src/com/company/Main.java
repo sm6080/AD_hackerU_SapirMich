@@ -40,7 +40,13 @@ public class Main {
         shira.cityId=Student.JERUSALEM;
         shira.maritialStatus=Student.MARRIED;
         shira.gender=Gender.FEMALE;
-        
+
+        //Car bmw=new Car(); // א"א -- כי המבנאי הוא  privte
+
+        int x5=13;
+        //int 5x=13;
+        PrinterType prinerType=PrinterType.LASER;
+        System.out.println(prinerType);
     }
 
 
@@ -86,4 +92,31 @@ class Student{
     int cityId;
     int maritialStatus;
     Gender gender;
+}
+
+enum PrinterType {
+    DOTMATRIX(4,"dotmatrix"), INKJET(3,"inkjet"), LASER(10,"laser"), THREE_D(1,"3D"), THERAL(20,"theral");
+
+    private int pageCapacity;
+    private String name;
+
+    private PrinterType(int pageCapacity, String name) {
+        this.pageCapacity = pageCapacity;
+        this.name = name;
+        System.out.println("in Printer Type");
+    }
+
+    public int getPageCapacity() {
+        return pageCapacity;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+
+class Car{
+    private Car() {
+    }
 }
