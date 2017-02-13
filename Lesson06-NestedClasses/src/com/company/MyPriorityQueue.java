@@ -1,7 +1,5 @@
 package com.company;
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
-
 import java.security.InvalidParameterException;
 
 /**

@@ -47,7 +47,26 @@ public class Main {
         //int 5x=13;
         PrinterType prinerType=PrinterType.LASER;
         System.out.println(prinerType);
+
+        int arr[]={6,7,4,2,5,8};
+        System.out.println(kSmallest(arr,4));
+
     }
+
+    // tar - return  the  smallest K in the array-
+
+    //נבנה ערימת מקסימום ואז כל פעם נכניס איבר ונוציא את האיבר המקסימלי
+    public static int[] kSmallest(int []arr, int k){
+        int minArr[]= new int[k];
+        MyPriorityQueue myPriorityQueue=new MyPriorityQueue(arr);
+        for (int i = 0; i <minArr.length ; i++) {
+            myPriorityQueue.insertBe();
+        }
+
+    }
+
+
+
 
 
 
