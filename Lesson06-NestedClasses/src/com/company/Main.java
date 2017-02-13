@@ -19,14 +19,31 @@ public class Main {
 
 
         // זה ששמתי סוגריים מסולסלים יצרתי אובייקט מסוג מחלקה שיורשת מ  Dog  ואין לה שם
+        // אילו יורשת פה מחלקה מ  Dog , ואין לה שם , לא ניתן ליצור אובייקט מהמחלקה הזו, היא חד פעמית
         Dog d=new Dog(){
+            @Override
+            void bark() {System.out.println("boof ");
+            }
+        };
+        d.bark(); //  boof
+
+        //זו לא אותה מחלקה , האובייקט פה הוא לא מאותה המחלקה הנ"ל
+        Dog d3 =new Dog(){
             @Override
             void bark() {
                 System.out.println("boof ");
             }
         };
-        d.bark(); //  boof
+
+        //שימוש בקבוע
+        Student shira=new Student();
+        shira.cityId=Student.JERUSALEM;
+        shira.maritialStatus=Student.MARRIED;
+        shira.gender=Gender.FEMALE;
+        
     }
+
+
 
     static Dog trainDog(Dog d ){
         class TrainDog extends Dog{
@@ -47,4 +64,26 @@ class Dog{
     void bark(){
         System.out.println("waf"+name);
     }
+}
+
+enum Gender{
+    MALE, FEMALE, OTHER
+}
+
+class Student{
+    //דרך א
+    public static final int JERUSALEM=23;
+    public static final int RAANANA=73;
+
+
+    public static final int MARRIED=73;
+    public static final int SINGLE=47;
+    public static final int DIVORCED=22;
+
+
+    String firsName;
+    String lastName;
+    int cityId;
+    int maritialStatus;
+    Gender gender;
 }

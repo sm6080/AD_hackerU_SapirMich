@@ -13,6 +13,7 @@ public class Circle {
 
     // המחלקה היא לא סטטית,
     // כל אובייקט  Circle שייוצר , תיווצר המחלקה  Point   חדשה לאותו אובייקט
+    //אין לי אובייקט של   Circle אני לא יכולה ליצור Point
     class Point{
         private int x, y;
 
