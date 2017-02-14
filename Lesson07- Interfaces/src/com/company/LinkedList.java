@@ -15,94 +15,129 @@ public class LinkedList implements List{
 
     @Override
     public void add(int x) {
-        Node n=anchor;
-        for (int i = 1; i < size; i++) {
-            n=n.next;
+        Node last=anchor;
+        while (last.next!=null){
+            last=last.next;
         }
-        n.next=new Node(x);
+        last.next=new Node(x);
         size++;
+
+        /*// another version
+
+            Node n=anchor;
+            for (int i =0; i<size; i++) {
+                n=n.next;
+            }
+            n.next=new Node(x);
+            size++;
+        }*/
     }
+
+
 
     @Override
     public void add(int x, int index) {
-        if (index>size+1)
+        if (index > size || index < 0)
             throw new IndexOutOfBoundsException();
-        Node n=anchor;
-        Node temp=anchor;
-        for (int i = 0;  i<index-1; i++) {
-            n=n.next;
-            size++;
+        Node theOneBefore = anchor;
+        for (int i = 0; i < index; i++) {
+            theOneBefore = theOneBefore.next;
         }
-        temp=n.next;
-        n.next=new Node(x);
-        n.next.next=temp;
+        Node added = new Node(x);
+        added.next = theOneBefore.next;
+        theOneBefore.next = added;
+        size++;
+
+        /*// another version
+
+           if(index>size||index<0)
+              throw new IndexOutOfBoundsException();
+            Node n=anchor,temp;
+            for (int i =0; i<index-1 ; i++)
+                n=n.next;
+            temp=n.next;
+            n.next=new Node(x);
+            n.next.next=temp;
+            size++;
+            }
+        }*/
     }
 
     @Override
     public void remove(int index) {
-        if (index>size)
+        if (index>size ||index<0)
             throw new IndexOutOfBoundsException();
-        Node n=anchor;
-        for (int i = 0;  i<index-1; i++) {
-            n=n.next;
-            size--;
+        Node theOneBefore=anchor;
+        for (int i = 0;  i<index; i++) {
+            theOneBefore=theOneBefore.next;
         }
-        n.next=n.next.next;
+        theOneBefore.next=theOneBefore.next.next;
+        size--;
     }
 
     @Override
     public void set(int index, int x) {
-        if (index>size)
+        if (index > size || index < 0)
             throw new IndexOutOfBoundsException();
-        Node n=anchor;
-        for (int i = 0;  i<index-1; i++) {
-            n=n.next;
+        Node n = anchor;
+        for (int i = 0; i <= index; i++) {
+            n = n.next;
         }
-        n.next.value=x;
-
+        n.next.value = x;
     }
 
     @Override
     public int get(int index) {
-        if (index>size)
+        if (index>size ||index<0)
             throw new IndexOutOfBoundsException();
         Node n=anchor;
-        for (int i = 0;  i<index-1; i++) {
+        for (int i = 0;  i<=index; i++) {
             n=n.next;
         }
-        return n.next.value;
+        return n.value;
     }
 
     //search
     @Override
     public int indexOf(int x) {
-        Node n=anchor;
-        for (int i = 1; i < size; i++) {
-          if(n.value==x)
-            return i+1;
-          n=n.next;
+        Node n = anchor.next;
+        for (int i = 0; i < size; i++) {
+            if (n.value == x)
+                return i ;
+            n = n.next;
         }
         return -1;
-
     }
 
     @Override
     public int[] toArray() {
-        Node n=anchor;
-        int [] arr=new int[size-1];
-        for (int i = 1; i < size; i++){
-            arr[i-1]=n.value;
+        Node n=anchor.next;
+        int [] tempArr=new int[size];
+        for (int i =0; i < size; i++){
+            tempArr[i]=n.value;
             n=n.next;
         }
-        return arr;
+        return tempArr;
     }
 
-    public void print(){
-        Node node=anchor;
-        for (int i = 0; i <size ; i++) {
-            System.out.print(node.value+" ");
-            node=node.next;
+    @Override
+    public String toString() {
+        if(size==0)
+            return "{}";
+        StringBuilder stringBuilder= new StringBuilder();
+        stringBuilder.append("{")  ;
+        Node n=anchor.next;
+        for (int i = 0; i < size-1; i++) {
+            stringBuilder.append(n.value+",");
+            n=n.next;
         }
+        stringBuilder.append(n.value);
+        stringBuilder.append("}");
+        return stringBuilder.toString();
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     private static class Node{
@@ -114,4 +149,5 @@ public class LinkedList implements List{
             next=null;
         }
     }
+
 }

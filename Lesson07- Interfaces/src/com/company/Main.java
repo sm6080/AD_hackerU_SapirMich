@@ -20,15 +20,16 @@ public class Main {
 
         System.out.println();
 
+       // List list =new LinkedList();  // אפשר גם כך או כמו למטה
+
         LinkedList linkedList=new LinkedList();
         linkedList.add(5);
         linkedList.add(3);
         linkedList.add(4);
         linkedList.add(7);
         linkedList.add(100,1);
-       // linkedList.remove(3);
-        linkedList.print();
-
+        linkedList.remove(3);
+        System.out.println(linkedList);
 
     }
     //Comparable התאמנו ל
