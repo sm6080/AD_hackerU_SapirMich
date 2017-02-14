@@ -1,25 +1,32 @@
 package com.company;
 
+import java.util.Iterator;
+
 /**
  * Created by Sapir Michaeli on 14.02.2017.
  */
-public class LinkedList implements List{
+public class LinkedList implements List,Iterable,Iterator{
 
     private Node anchor; // יצביע לראשון ברשימה
+    private Node last; // יצביע לאחרון ברשימה
     private int size;
+    private Node current;
 
     public LinkedList() {
         anchor = new Node(0); //הוא  Node  פיקטיבי
         size = 0;
+        last=anchor;
     }
 
     @Override
     public void add(int x) {
-        Node last=anchor;
+        // שמנו בהערה כי הוספנו את ה last
+       /* Node last=anchor;
         while (last.next!=null){
             last=last.next;
-        }
+        }*/
         last.next=new Node(x);
+        last=last.next;
         size++;
 
         /*// another version
@@ -39,6 +46,10 @@ public class LinkedList implements List{
     public void add(int x, int index) {
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException();
+        if (index == size) {  // טיפול אם זה באחרון
+            add(x);
+            return;
+        }
         Node theOneBefore = anchor;
         for (int i = 0; i < index; i++) {
             theOneBefore = theOneBefore.next;
@@ -65,13 +76,15 @@ public class LinkedList implements List{
 
     @Override
     public void remove(int index) {
-        if (index>size ||index<0)
+        if (index > size || index < 0)
             throw new IndexOutOfBoundsException();
-        Node theOneBefore=anchor;
-        for (int i = 0;  i<index; i++) {
-            theOneBefore=theOneBefore.next;
+        Node theOneBefore = anchor;
+        for (int i = 0; i < index; i++) {
+            theOneBefore = theOneBefore.next;
         }
-        theOneBefore.next=theOneBefore.next.next;
+        if (index == size)
+            last = theOneBefore;
+        theOneBefore.next = theOneBefore.next.next;
         size--;
     }
 
@@ -88,11 +101,11 @@ public class LinkedList implements List{
 
     @Override
     public int get(int index) {
-        if (index>size ||index<0)
+        if (index > size || index < 0)
             throw new IndexOutOfBoundsException();
-        Node n=anchor;
-        for (int i = 0;  i<=index; i++) {
-            n=n.next;
+        Node n = anchor;
+        for (int i = 0; i <= index; i++) {
+            n = n.next;
         }
         return n.value;
     }
@@ -136,8 +149,25 @@ public class LinkedList implements List{
         return stringBuilder.toString();
     }
 
-    public void setSize(int size) {
-        this.size = size;
+    public int setSize() {
+        return size;
+    }
+
+    @Override
+    public Iterator iterator() {
+        current=anchor;
+        return this;  // מצביע לעצמי , אני גם Iterator
+    }
+
+    @Override
+    public boolean hasNext() {
+        return current.next!=null; //אם הוא לא אחרון מחזירים TRUE
+    }
+
+    @Override
+    public Object next() {
+        current=current.next;
+        return current.value;
     }
 
     private static class Node{

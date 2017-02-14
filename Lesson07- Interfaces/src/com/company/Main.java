@@ -20,7 +20,7 @@ public class Main {
 
         System.out.println();
 
-       // List list =new LinkedList();  // אפשר גם כך או כמו למטה
+       List list =new LinkedList();  // אפשר גם כך או כמו למטה
 
         LinkedList linkedList=new LinkedList();
         linkedList.add(5);
@@ -30,6 +30,33 @@ public class Main {
         linkedList.add(100,1);
         linkedList.remove(3);
         System.out.println(linkedList);
+
+
+       /* זה גרוע מאוד ולכן נשתמש ב Iterator והשני
+       int size=linkedList.setSize();
+        int max=linkedList.get(0);
+        for (int i = 1; i <size ; i++) {
+            int vale=linkedList.get(i);
+            if (vale>max)
+                max=vale;
+        }
+        System.out.println(max);
+*/
+        // ווכה אנו עוברים בצורה הטובה
+        //int max=linkedList.get(0);
+        for (Object i:linkedList) {
+            Integer x=(Integer)i;
+            System.out.println();
+        }
+
+        // זה התרגום של השורות למעלה  -ה foreach
+        /*linkedList.iterator();
+        while (linkedList.hasNext()){
+            Integer x=(Integer)linkedList.next();
+            System.out.println(x);
+
+        }
+*/
 
     }
     //Comparable התאמנו ל
