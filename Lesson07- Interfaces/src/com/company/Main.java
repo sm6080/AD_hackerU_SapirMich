@@ -18,7 +18,28 @@ public class Main {
             System.out.print(myPoint[i]);
         }
 
-        System.out.println();
+
+
+
+
+        MotionSensor sensor = new MotionSensor();
+	    //Siren siren = new Siren();
+	    //sensor.setListener(siren);
+        Police police = new Police();
+        sensor.setListener(police);
+	    sensor.detectMotion();
+
+
+	    Button btnLogin = new Button();
+	    btnLogin.setListener(new Button.OnClickListener() {    //נתנו לו כתובת לאובייקט שאם יממשו את הפונקציה הוא כשיר לקבל את העדכונים - סיפקנו לו קטע קוד של מהלעשות כשלוחצים עליו
+            @Override
+            public void onClick(View view) {
+                System.out.println("button clicked");
+            }
+        });
+
+
+
 
        List list =new LinkedList();  // אפשר גם כך או כמו למטה
 
@@ -134,6 +155,9 @@ interface Edible{
 }
 
 
+
+//Listener Model
+
 /*class MotionSensor{
     private MotionListener listeners;
     public void setListener(MotionListener listeners) {
@@ -166,6 +190,7 @@ class MotionSensor{
             this.listeners[size++] = listener;
     }
 
+    //הוא תכלס יודע לגלות תנועה
     void detectMotion(){
         for (int i = 0; i < size; i++) {
             this.listeners[i].motionDetected(123);
@@ -222,5 +247,34 @@ class Button extends View{
         void onClick(View view);
     }
 }
+
+
+
+
+
+class Dog{
+    private static int counter=0;
+    private Dog (){   // כל יצירה של אוביקט חדשDog  יתחיל את המונה
+        counter++;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
