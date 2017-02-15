@@ -3,7 +3,7 @@ package com.company;
 /**
  * Created by Sapir Michaeli  on 15.02.2017.
  */
-public class MergeSortLinkedList {
+public class mergeSortLinkedList {
 
     public static Node merge(Node n1, Node n2) {
         Node anchor = new Node();
@@ -18,7 +18,7 @@ public class MergeSortLinkedList {
                 tail.next = n1;
                 break;
             }
-            if (n1.next.value <= n2.next.value) {
+            if (n1.value <= n2.value) {
                 tail.next = n1;
                 n1 = n1.next;  //n1 קידום
             } else {

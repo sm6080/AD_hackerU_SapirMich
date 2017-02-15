@@ -1,8 +1,5 @@
 package com.company;
 
-import javax.swing.*;
-import java.awt.dnd.peer.DropTargetContextPeer;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -89,24 +86,28 @@ public class Main {
 
 
 
-        MergeSortLinkedList.Node list1=new MergeSortLinkedList.Node(2,
-                new MergeSortLinkedList.Node(7,
-                        new MergeSortLinkedList.Node(18,
-                                new MergeSortLinkedList.Node(21))));
+        mergeSortLinkedList.Node list1 =
+                new mergeSortLinkedList.Node(17,
+                        new mergeSortLinkedList.Node(4,
+                                new mergeSortLinkedList.Node(1,
+                                        new mergeSortLinkedList.Node(12))));
 
-        MergeSortLinkedList.Node list2=new MergeSortLinkedList.Node(5,
-                new MergeSortLinkedList.Node(6,
-                        new MergeSortLinkedList.Node(20)));
-        MergeSortLinkedList.Node merged=MergeSortLinkedList.merge(list1,list2);
-        while (merged!=null) {
-            System.out.println(merged.value + " ");
+
+
+        mergeSortLinkedList.Node list2 =
+                new mergeSortLinkedList.Node(5,
+                        new mergeSortLinkedList.Node(6,
+                                new mergeSortLinkedList.Node(20)));
+        mergeSortLinkedList.Node merged = mergeSortLinkedList.merge(list1, list2);
+        while(merged != null){
+            System.out.print(merged.value + " ");
             merged = merged.next;
         }
 
-        MergeSortLinkedList.Node sorted=MergeSortLinkedList.mergeSort(list1);
-        while (sorted!=null){
-            System.out.println(sorted.value+" ");
-            sorted=sorted.next;
+        mergeSortLinkedList.Node sorted = mergeSortLinkedList.mergeSort(list1);
+        while(sorted != null){
+            System.out.print(sorted.value + " ");
+            sorted = sorted.next;
         }
 
 
