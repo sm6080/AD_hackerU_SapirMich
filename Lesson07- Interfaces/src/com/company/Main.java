@@ -79,6 +79,34 @@ public class Main {
         }
 */
 
+
+        Dog myDog =Dog.getDog();
+        myDog.setName("snoopy");
+
+        Dog anotherDog= Dog.getDog();
+        System.out.println(anotherDog.getName());
+
+
+
+
+        MergeSortLinkedList.Node list1=new MergeSortLinkedList.Node(2,
+                new MergeSortLinkedList.Node(7,
+                        new MergeSortLinkedList.Node(18,
+                                new MergeSortLinkedList.Node(21))));
+
+        MergeSortLinkedList.Node list2=new MergeSortLinkedList.Node(5,
+                new MergeSortLinkedList.Node(6,
+                        new MergeSortLinkedList.Node(20)));
+        MergeSortLinkedList.Node merged=MergeSortLinkedList.merge(list1,list2);
+        while (merged!=null) {
+            System.out.println(merged.value + " ");
+            merged = merged.next;
+        }
+
+
+
+
+
     }
     //Comparable התאמנו ל
         static void bubleSort(Comparable[] arr) {
@@ -97,8 +125,6 @@ public class Main {
             upTo--; // נעזוב את האיבר האחרון כי הוא במקומו
         }
     }
-
-
 
 
 
@@ -251,11 +277,27 @@ class Button extends View{
 
 
 
-
+//Singelton
 class Dog{
-    private static int counter=0;
-    private Dog (){   // כל יצירה של אוביקט חדשDog  יתחיל את המונה
-        counter++;
+    private static Dog dog;
+    String name;
+    private Dog (){
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // המתודה הסטטית הזו, אם זה null כבר לא יהיה. אם לא זה פשוט מחזיר את הכתובת של האובייקט
+    public static Dog getDog(){
+        if (dog==null)
+            dog=new Dog();
+        return dog;
     }
 }
 
