@@ -8,14 +8,14 @@ public class MaxHeap extends Heap {
         super(true);
     }
 
-    public MaxHeap(int[] arr) {
+    public MaxHeap(int[] arr){
         super(arr, true);
     }
 
     public int getMax(){
         return getTop();
-
     }
+
     public int extractMax(){
         return extractTop();
     }

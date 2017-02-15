@@ -24,7 +24,9 @@ public class MedianCollection {
     public void insert(int num) {
         maxHeap.insert(num);
         if (maxHeap.getMax()>minHeap.getMin()){
-            
+            minHeap.insert(maxHeap.extractMax());
+            maxHeap.insert(minHeap.extractMin());
+
         }
         if (maxHeap.getSize() - minHeap.getSize() == 2) {  // מיד שזה 2 זה כבר יהיה יותר מידי ונצטרך לטפל ולהעביר לערימה השניה
             minHeap.insert(maxHeap.extractMax());

@@ -38,7 +38,7 @@ public abstract class Heap {
         int largest = i;
         int l = leftChild(i);
         int r = rightChild(i);
-        if(l<size && compare(arr[l] , arr[largest]))
+        if(l<size && compare(arr[l],arr[largest]))
             largest = l;
         if(r<size && compare(arr[r], arr[largest]))
             largest = r;
@@ -52,7 +52,7 @@ public abstract class Heap {
 
     private void bubbleUp(int i) {
         int p;
-        while (i != 0 && compare(arr[i], arr[(p = parent(i))])) {
+        while(i != 0 && compare(arr[i], arr[(p=parent(i))])){
             int temp = arr[i];
             arr[i] = arr[p];
             arr[p] = temp;
@@ -83,7 +83,7 @@ public abstract class Heap {
 
     // גרמתי לאיבר להיות הכי גדול שאפשר ואז עשיתי EXTRACT - זה היה בערימת מקס ופה נפחית כדי שיהיה מינ
     public void delete(int i){
-        increase(i,isMaxHeap? Integer.MAX_VALUE - arr[i]:arr[i]-Integer.MIN_VALUE);
+        increase(i, isMaxHeap ? Integer.MAX_VALUE - arr[i] : Integer.MIN_VALUE - arr[i]);
         extractTop();
     }
 

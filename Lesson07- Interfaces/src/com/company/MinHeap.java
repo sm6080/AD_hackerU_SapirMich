@@ -5,17 +5,17 @@ package com.company;
 
 public class MinHeap extends Heap {
     public MinHeap() {
-        super(true);
+        super(false);
     }
 
-    public MinHeap(int[] arr) {
-        super(arr, true);
+    public MinHeap(int[] arr){
+        super(arr, false);
     }
 
     public int getMin(){
         return getTop();
-
     }
+
     public int extractMin(){
         return extractTop();
     }
