@@ -103,6 +103,12 @@ public class Main {
             merged = merged.next;
         }
 
+        MergeSortLinkedList.Node sorted=MergeSortLinkedList.mergeSort(list1);
+        while (sorted!=null){
+            System.out.println(sorted.value+" ");
+            sorted=sorted.next;
+        }
+
 
 
 
