@@ -5,9 +5,9 @@ import java.security.InvalidParameterException;
 /**
  * Created by Sapir Michaeli on 15.02.2017.
  */
-
+// המחלקה HEAP שלמדנו עליה אך תיקנו בצורה שתתאים לערימת מקסימום או מינימום
 // copied and added from MyPriorityQueue
-public class Heap {
+public abstract class Heap {
     private int[] arr;
     private int size;
     private  boolean isMaxHeap;
@@ -84,7 +84,7 @@ public class Heap {
     // גרמתי לאיבר להיות הכי גדול שאפשר ואז עשיתי EXTRACT - זה היה בערימת מקס ופה נפחית כדי שיהיה מינ
     public void delete(int i){
         increase(i,isMaxHeap? Integer.MAX_VALUE - arr[i]:arr[i]-Integer.MIN_VALUE);
-        extractMax();
+        extractTop();
     }
 
 
@@ -103,7 +103,7 @@ public class Heap {
         bubbleUp(i);
     }
 
-    public int getMaxOrMin(){//depend if its min heap or max heap
+    public int getTop(){//get Max Or Min depend if its min heap or max heap
         if(size == 0)
             throw new IndexOutOfBoundsException();
 
@@ -113,7 +113,7 @@ public class Heap {
 
     //size--
     //34 123 5 23 5  6 45 34 5 2 2
-    public int extractMax(){
+    public int extractTop(){  //extract Max Or Min depend if its min heap or max heap
         if(size == 0)
             throw new IndexOutOfBoundsException();
 
