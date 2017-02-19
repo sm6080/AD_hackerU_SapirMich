@@ -3,8 +3,15 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.InvalidParameterException;
 
 public class Main {
+
+    private static final byte ASCII_0 = 48;
+    private static final byte ASCII_9 = 57;
+    private static final byte ASCII_MINUS = 45;
+
+
     public static void main(String[] args) {
 
         //region GENERIC CLASS
@@ -31,7 +38,7 @@ public class Main {
             sharks.add((Shark) animals.get(i));
             //problem is we have to make a new list. however new objects were no created, only one list
         }
-        List <?> list2=animals; //to solve raw type problem
+        List<?> list2 = animals; //to solve raw type problem
         //does not permit adding or indexOf only passive activities like printing
         System.out.println(list2.get(1));
 
@@ -44,27 +51,25 @@ public class Main {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("enter your age");
         try {
-            String ageAsString=bufferedReader.readLine();
-            int age=Integer.valueOf(ageAsString);
-            System.out.println("Your age is "+age);
-        }
-        catch (IOException ex){
+            String ageAsString = bufferedReader.readLine();
+            int age = Integer.valueOf(ageAsString);
+            System.out.println("Your age is " + age);
+        } catch (IOException ex) {
             System.out.println("error reading");
-        }
-        catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             System.out.println("Must enter int");
         }
 
         //endregion
         //region STRING FUNCTIONS
-        String s="hello";
-        byte[] sBytes=s.getBytes();
-        char c=(char)sBytes[0];
+        String s = "hello";
+        byte[] sBytes = s.getBytes();
+        char c = (char) sBytes[0];
         System.out.println(c);
         System.out.println(sBytes[0]);
-        System.out.println(couldIBeInt("123"));
-        int check=valueOf("1234");
-        System.out.println("CHECK "+check);
+        System.out.println(isInt("123"));
+        int check = valueOf("1234");
+        System.out.println("CHECK " + check);
         //endregion
     }
     //region GENERIC METHODS
@@ -74,27 +79,37 @@ public class Main {
             list.add(obj);
         }
     }
+
     //endregion
     //region STRING METHODS CONTINUED
-    public static boolean couldIBeInt (String s){
-        if(s==null) return false;
-        byte[] checker=s.getBytes();
-        for (int i = 0; i < checker.length; i++) {
-            if(checker[i]<48 || checker[i]>57)
+    public static boolean isInt(String s) {
+        if (s == null || s.length() == 0)
+            return false;
+        byte[] myBytes = s.getBytes();
+        int i = 0;
+        if (myBytes[0] == ASCII_MINUS) // if negative
+            i++;
+        for (i = 0; i < myBytes.length; i++) {
+            if (myBytes[i] < ASCII_0 || myBytes[i] > ASCII_9) // ASCII_0= 48....
                 return false;
         }
         return true;
     }
-    public static int valueOf(String string){
-        if(couldIBeInt(string)){
-            int result=0;
-            byte[] ints= string.getBytes();
-            for (int i = 0; i < ints.length; i++)
-                result=result*10+(ints[i]-48);
-            return result;
-        }
-        return -1;
+
+
+    public static int valueOf(String string) {
+        if (!isInt(string))
+            throw new InvalidParameterException();
+        boolean neg = false;
+        int result = 0;
+        byte[] ints = string.getBytes();
+        if (ints[0] == 45)
+            neg = true;
+        for (int i = 1; i < ints.length; i++)
+            result = result * 10 + (ints[i] - 48); //bc we want actual value not ascii number
+        return neg ? (-1) * result : result;
     }
+
     //endregion
 }
 
