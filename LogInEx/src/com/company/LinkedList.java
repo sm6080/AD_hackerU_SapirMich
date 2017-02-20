@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 /**
  * Created by Sapir Michaeli on 14.02.2017.
  */
-public class LinkedList<T> implements List<T>,Iterable,Iterator {
+public class LinkedList<T> implements List<T>,Iterable<T>,Iterator<T> {
 
-    private final Node anchor; // יצביע לראשון ברשימה
-    private Node current;
+    private  Node<T> anchor; // יצביע לראשון ברשימה
+    private Node<T> current;
     private int size;
 
 
@@ -18,6 +18,9 @@ public class LinkedList<T> implements List<T>,Iterable,Iterator {
         return size;
     }
 
+    public Node<T> getCurrent() {
+        return current;
+    }
 
     public LinkedList() {
         anchor = new Node<T>(null); //fictitious node
@@ -131,21 +134,12 @@ public class LinkedList<T> implements List<T>,Iterable,Iterator {
     }
 
     @Override
-    public void forEach(Consumer action) {
-    }
-
-    @Override
-    public Spliterator spliterator() {
-        return null;
-    }
-
-    @Override
     public boolean hasNext() {
         return current.next != null;
     }
 
     @Override
-    public Object next() {
+    public T next() {
         current = current.next;
         return current.value; //Boxing: Object-->Integer
     }
