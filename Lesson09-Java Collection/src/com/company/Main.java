@@ -30,6 +30,27 @@ public class Main {
 
 
 
+        Queue q=new Queue();
+        q.insert(7);
+        q.insert(2);
+        q.insert(4);
+        q.insert(6);
+        q.insert(5);
+        q.insert(5);
+        q.insert(5);
+        q.insert(5);
+        q.insert(5);
+        q.insert(5);
+        q.pop();
+        q.insert(1);
+
+
+        while (!q.isEmpty()){
+            System.out.println(q.pop());
+        }
+
+
+
 
 
 
