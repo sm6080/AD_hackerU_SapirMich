@@ -104,14 +104,21 @@ public class MyString implements Comparable<MyString> {
 
     @Override
     public int hashCode() {
-        int n=chars.length-1;
-        char a=chars[0];
-        char b=chars[n/4];
-        char c=chars[3*n/4];
-        char d=chars[n];
-        //byte d=(byte) chars[n];         // המרה לבייט
+        int n = chars.length - 1;
+        byte a = (byte) chars[0];
+        byte b = (byte) chars[n / 4];
+        byte c = (byte) chars[3 * n / 4];
+        byte d = (byte) chars[n];             //char d=chars[n];         // המרה לבייט
 
-
+        int hash = 0;
+        hash |= (a & 0xFF);
+        hash <<= 8;
+        hash |= (b & 0xFF);
+        hash <<= 8;
+        hash |= (c & 0xFF);
+        hash <<= 8;
+        hash |= (d & 0xFF);
+        return hash;
 
     }
 }
