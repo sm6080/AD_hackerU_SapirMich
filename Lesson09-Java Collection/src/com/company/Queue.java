@@ -43,7 +43,7 @@ public class Queue {
         return x;
     }
 
-    //פןפ וםרונט שניהם מחזירים את הראשון אך פופ גם מוציא אותו
+    //פופ וםרונט שניהם מחזירים את הראשון אך פופ גם מוציא אותו
     public int front() {
         if (isEmpty())
             throw new IndexOutOfBoundsException();
