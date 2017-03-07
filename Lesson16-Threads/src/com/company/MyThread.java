@@ -1,9 +1,10 @@
 package com.company;
 
 /**
- * Created by hackeru on 06.03.2017.
+ * Created by Sapir Michaeli on 06.03.2017.
  */
 public class MyThread extends Thread {
+
     @Override
     public void run() {
         System.out.println("do long running stuff");
@@ -15,9 +16,6 @@ public class MyThread extends Thread {
         System.out.println("done doing long running stuff");
 
     }
-
-
-
 
 
 }
