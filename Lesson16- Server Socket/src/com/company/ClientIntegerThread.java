@@ -22,16 +22,30 @@ public class ClientIntegerThread extends Thread{
     @Override
     public void run() {
         try {
-            int x, y, j;
+            int x, y, j=0;
             int actuallyRead = 0;
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
+            char op=(char)inputStream.read(); // get the char
             byte[] buffer = new byte[4];
             actuallyRead = inputStream.read(buffer);
             x = ByteBuffer.wrap(buffer).getInt();
             actuallyRead = inputStream.read(buffer);
             y = ByteBuffer.wrap(buffer).getInt();
-            j = plus(x, y);
+
+            switch (op){
+                case '+':j=plus(x,y);
+                    break;
+                case '-':j=subtraction(x,y);
+                    break;
+                case '*':j=mult(x,y);
+                    break;
+                case '/':j=divition(x,y);
+                    break;
+                default:
+                    if (socket!=null)
+                        socket.close();
+            }
             ByteBuffer.wrap(buffer).putInt(j);
             outputStream.write(buffer);
 
@@ -61,7 +75,21 @@ public class ClientIntegerThread extends Thread{
     }
 
     public int plus(int x,int y){
-        System.out.println(x+""+y);
         return x+y;
+    }
+    public int subtraction (int x,int y){
+        return x-y;
+    }
+    public int mult (int x,int y){
+        return x*y;
+    }
+    public int divition (int x,int y){
+        if (y==0)
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        return x/y;
     }
 }

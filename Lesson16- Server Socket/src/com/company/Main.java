@@ -13,7 +13,7 @@ public class Main {
     //socket server
     public static void main(String[] args) {
 
-  /*
+  /*  זה עבור String  השיחה בין השרת ללקוח
         try {
                         // בפורט מסוים רק אחד יכול להאזין ולכן אם נשתמש בפורט שמיהו מאזין בו נזרוק exception
           // יש לי  ServerSocket אחד ויחיד
