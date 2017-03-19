@@ -65,18 +65,20 @@ public class Main {
 
     public static void operate(int num1, int num2, char op) {
         try {
+            byte[] arrBytes =new byte[9]; // כדי לכתוב לו את כל המשתנים ביחד
 
             Socket socket = new Socket("127.0.0.1", PORT);
             InputStream inputStream = socket.getInputStream();
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(op);
+            //outputStream.write(op);
+            arrBytes[0]=(byte)op;
 
             // convert to byte
-            byte[] bytes = new byte[4];
-            ByteBuffer.wrap(bytes).putInt(num1);
-            outputStream.write(bytes);
-            ByteBuffer.wrap(bytes).putInt(num2);
-            outputStream.write(bytes);
+            //byte[] bytes = new byte[4];
+            ByteBuffer.wrap(arrBytes).putInt(num1);
+            //outputStream.write(arrBytes);
+            ByteBuffer.wrap(arrBytes).putInt(num2);
+            outputStream.write(arrBytes);
 
             byte[] buffer = new byte[4];
             int actuallyRead = inputStream.read(buffer); //x

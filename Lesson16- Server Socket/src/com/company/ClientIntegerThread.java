@@ -11,12 +11,14 @@ import java.nio.ByteBuffer;
  * Created by Sapir Michaeli on 08.03.2017.
  */
 public class ClientIntegerThread extends Thread{
-    Socket socket;
-    InputStream inputStream;
-    OutputStream outputStream;
+    private Socket socket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     public ClientIntegerThread(Socket socket) {
         this.socket = socket;
+        inputStream=null;
+        outputStream=null;
     }
 
     @Override
@@ -74,16 +76,16 @@ public class ClientIntegerThread extends Thread{
         }
     }
 
-    public int plus(int x,int y){
+    public int plus(int x,int y) throws IOException{
         return x+y;
     }
-    public int subtraction (int x,int y){
+    public int subtraction (int x,int y) throws IOException{
         return x-y;
     }
-    public int mult (int x,int y){
+    public int mult (int x,int y) throws IOException{
         return x*y;
     }
-    public int divition (int x,int y){
+    public int divition (int x,int y) throws IOException{
         if (y==0)
             try {
                 socket.close();
