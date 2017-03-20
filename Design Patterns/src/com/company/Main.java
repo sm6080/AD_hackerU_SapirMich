@@ -249,6 +249,8 @@ class FactoryProducer{
 //התנהגות של מתודה ניתנת לשינוי בזמן ריצה. התבנית נופלת תחת הקטגוריה השלישית.
 // תבנית זו מייצרת אובייקטים שמייצגים אסטרטגיות שונות ואובייקט context שההתנהגות שלו משתנה לפי האסטרטגיה. אובייקט האסטרטגיה משנה את האלגוריתם של אובייקט ה- context
 
+
+//example 1
 interface EncryptionStrategy{
     int encrypt(File input,File output);
 }
@@ -282,6 +284,9 @@ class CaesarEncryption implements EncryptionStrategy{
      }
  }
 
+
+
+//example 2
  interface CalculateStrategy{
     int calculate(int x, int y);
  }
