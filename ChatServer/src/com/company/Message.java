@@ -1,18 +1,33 @@
 package com.company;
 
-import java.util.ArrayList;
-
 /**
- * Created by Sapir Michaeli on 21.03.2017.
+ * Created by Sapir Michaeli on 29.03.2017.
  */
 public class Message {
-    ArrayList <String> messagesList;
+    private String sender;
+    private String content;
 
-    public Message(ArrayList<String> messagesList) {
-        this.messagesList = messagesList;
+    public Message(String sender, String content) {
+        this.sender = sender;
+        this.content = content;
     }
 
-    public void addMessage(String message){
-        messagesList.add(message);
+    public String getSender() {
+        return sender;
     }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+
+
 }
