@@ -21,6 +21,8 @@ public class ClientThread extends Thread {
     public static final int OK = 101;
     public static final int FAIL = 101;
 
+    boolean shouldDecrement = false;
+
 
     public ClientThread(UploadedFile uploadedFile, Socket clientSocket) {
         this.uploadedFile = uploadedFile;
@@ -72,74 +74,78 @@ public class ClientThread extends Thread {
 
     // מעלים אל השרת
     private void upload() throws IOException {
-        boolean lock=false;
-        synchronized (uploadedFile){
-            if (!uploadedFile.isLocked()){  // כשיש הצלחה הוא משנה מצב
+        boolean lock=true;
+        synchronized (uploadedFile) {
+            if (!uploadedFile.isLocked() && uploadedFile.concurrentDownload.get() == 0) {  // כשיש הצלחה הוא משנה מצב
                 uploadedFile.lock();  // נועלים לכבודך !
-                lock=false;
+                lock = false;
             }
         }
-        outputStream.write(lock?FAIL:OK);
-        if (lock)
+        outputStream.write(lock ? FAIL : OK);
+        if(lock)
             return;
-        int fileNameLength=inputStream.read();
-        if (fileNameLength==-1) {
+        int fileNameLength = inputStream.read();
+        if(fileNameLength == -1) {
             uploadedFile.unlock();
             return;
         }
-        byte[] fileNameBytes=new byte[fileNameLength];
-        int actuallyRead=inputStream.read(fileNameBytes);
-        if (actuallyRead!=fileNameLength) {
+        byte[] fileNameBytes = new byte[fileNameLength];
+        int actuallyRead = inputStream.read(fileNameBytes);
+        if(actuallyRead != fileNameLength){
             uploadedFile.unlock();
             return;
         }
-        fileOutputStream=new FileOutputStream(uploadedFile);
+        fileOutputStream = new FileOutputStream(uploadedFile);
         int oneByte;
-        while ((oneByte = inputStream.read()) != -1) {
+        while((oneByte = inputStream.read()) != -1) {
             fileOutputStream.write(oneByte);
-            try {
-                Thread.sleep(15);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(15);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         fileOutputStream.close();
-        fileOutputStream=null;
+        fileOutputStream = null;
         uploadedFile.setFileNameBytes(fileNameBytes);
         uploadedFile.increaseVersion();
         uploadedFile.unlock();
     }
 
 
+
     private void download() throws IOException {
-        if (uploadedFile.isLocked()) {
+        if(uploadedFile.isLocked()) {
             outputStream.write(FAIL);
             return;
-        } else
+        }else{
             outputStream.write(OK);
-        byte []versionBytes=new byte[4];
+        }
+        byte[] versionBytes = new byte[4];
         ByteBuffer.wrap(versionBytes).putInt(uploadedFile.getVersion());
         outputStream.write(versionBytes);
-        int shouldSendFile=inputStream.read();// שהקליינט יגיד לי אם יש טעם בהורדה
-        if (shouldSendFile!=OK)
+        int shouldSendFile = inputStream.read();
+        if(shouldSendFile != OK) {
             return;
+        }
+        uploadedFile.concurrentDownload.incrementAndGet();
+        shouldDecrement = true;
         outputStream.write(uploadedFile.getFileNameBytes().length);// ם הקובץ וגודלו ב- 2 השורות הלו
         outputStream.write(uploadedFile.getFileNameBytes());
         fileInputStream = new FileInputStream(uploadedFile);
-        //TODO:: reading/downloading lock
+        //TODO: reading/downloading lock
         int oneByte;
-        while ((oneByte = fileInputStream.read()) != -1) {
+        while((oneByte = fileInputStream.read()) != -1) {
             outputStream.write(oneByte);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(10);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         fileInputStream.close();
         fileInputStream = null;
     }
-
 
     private void handleCloseOfStreams() {
         if (inputStream != null)
