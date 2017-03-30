@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
  */
 public class ClientThread extends Thread {
 
+    private static final int MAX_FILE_LENGTH =1000 ;
     Socket clientSocket;
     UploadedFile uploadedFile;
     private InputStream inputStream;
@@ -18,8 +19,8 @@ public class ClientThread extends Thread {
 
     public static final int UPLOAD = 100;
     public static final int DOWNLOAD = 101;
-    public static final int OK = 101;
-    public static final int FAIL = 101;
+    public static final int OKAY = 102;
+    public static final int FAILURE = 103;
 
     boolean shouldDecrement = false;
 
@@ -81,7 +82,7 @@ public class ClientThread extends Thread {
                 lock = false;
             }
         }
-        outputStream.write(lock ? FAIL : OK);
+        outputStream.write(lock ? FAILURE : OKAY);
         if(lock)
             return;
         int fileNameLength = inputStream.read();
@@ -96,9 +97,11 @@ public class ClientThread extends Thread {
             return;
         }
         fileOutputStream = new FileOutputStream(uploadedFile);
-        int oneByte;
-        while((oneByte = inputStream.read()) != -1) {
-            fileOutputStream.write(oneByte);
+        byte[] buffer=new byte[1024]; // check if its size not large than 1M
+        int counter=0;
+        while((actuallyRead = inputStream.read(buffer)) != -1 && counter<MAX_FILE_LENGTH) {
+            fileOutputStream.write(buffer,0,actuallyRead);
+            counter++;
 //            try {
 //                Thread.sleep(15);
 //            } catch (InterruptedException e) {
@@ -116,16 +119,16 @@ public class ClientThread extends Thread {
 
     private void download() throws IOException {
         if(uploadedFile.isLocked()) {
-            outputStream.write(FAIL);
+            outputStream.write(FAILURE);
             return;
         }else{
-            outputStream.write(OK);
+            outputStream.write(OKAY);
         }
         byte[] versionBytes = new byte[4];
         ByteBuffer.wrap(versionBytes).putInt(uploadedFile.getVersion());
         outputStream.write(versionBytes);
         int shouldSendFile = inputStream.read();
-        if(shouldSendFile != OK) {
+        if(shouldSendFile != OKAY) {
             return;
         }
         uploadedFile.concurrentDownload.incrementAndGet();
@@ -134,6 +137,9 @@ public class ClientThread extends Thread {
         outputStream.write(uploadedFile.getFileNameBytes());
         fileInputStream = new FileInputStream(uploadedFile);
         //TODO: reading/downloading lock
+        byte[] fileSizeBytes=new byte[8];
+        ByteBuffer.wrap(fileSizeBytes).putLong(uploadedFile.length());
+        outputStream.write(fileSizeBytes);
         int oneByte;
         while((oneByte = fileInputStream.read()) != -1) {
             outputStream.write(oneByte);

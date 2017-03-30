@@ -9,16 +9,16 @@ enum MenuChoice{
     UPLOAD, DOWNLOAD
 }
 
-public class Main {
+public class Main   {
 
-    //public static final String SERVER_IP = "127.0.0.1";
-    public static final String SERVER_IP = "10.0.11.49";
+    public static final String SERVER_IP = "127.0.0.1";
+   // public static final String SERVER_IP = "10.0.11.49";
     public static final int PORT = 3000;
 
     public static final int UPLOAD = 100;
     public static final int DOWNLOAD = 101;
-    public static final int OKAY = 90;
-    public static final int FAILURE = 91;
+    public static final int OKAY = 102;
+    public static final int FAILURE = 103;
 
 
     static int existingVersion = 0;
@@ -58,7 +58,11 @@ public class Main {
             String input = getUserInput();
             File fileToUpload = new File(input);
             if (fileToUpload.exists() && fileToUpload.isFile()) {
-                if (uploadToServer(fileToUpload)) {
+                if (fileToUpload.length() >1000000){  // לבדוק שלא מעל גודל מסוים
+                    System.out.println("file is too large");
+                    break;
+                }
+                if (uploadToServer(fileToUpload,progress -> System.out.println("progress: "+progress))) {
                     System.out.println("uploaded successfully");
                     break;
                 } else
@@ -71,7 +75,7 @@ public class Main {
 
     static void downloadChoice(File downloadPath) {
         System.out.println("downloading...");
-        DownloadResult downloadResult = downloadFromServer(downloadPath);
+        DownloadResult downloadResult = downloadFromServer(downloadPath,progress -> System.out.println("progress: "+progress));
         if (downloadResult.getErrorCode() == DownloadResult.SUCCESS) {
             System.out.println("downloaded successfully to " +
                     downloadResult.getFileName());
@@ -104,38 +108,8 @@ public class Main {
         }
     }
 
-    static File getDownloadPath() {
-        while (true) {
-            System.out.println("please enter a download directory:");
-            String pathString = getUserInput();
-            if (pathString.equals("exit"))
-                return null;
-            File file = new File(pathString);
-            if (file.exists() && file.isDirectory())
-                return file;
-            System.out.println("invalid path");
-        }
-    }
 
-    static String getUserInput() {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            return bufferedReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
-
-
-    static void exit() {
-        System.out.println("bye bye");
-        System.exit(0);
-    }
-
-
-    static boolean uploadToServer(File fileToUpload) {
+    static boolean uploadToServer(File fileToUpload,ProgressListener progressListener) {
         Socket socket = null;
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -152,9 +126,16 @@ public class Main {
             outputStream.write(fileNameBytes.length);
             outputStream.write(fileNameBytes);
             fileInputStream = new FileInputStream(fileToUpload);
-            int oneByte;
-            while ((oneByte = fileInputStream.read()) != -1) {
-                outputStream.write(oneByte);
+            int actuallyRead;
+            byte[] buffer=new byte[1024];
+            long fileSize=fileToUpload.length();
+            long totalUploaded=0;
+            while ((actuallyRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer,0,actuallyRead);
+                totalUploaded+=actuallyRead;
+                int percentCompleted=(int)(100L*totalUploaded/fileSize);
+                if (progressListener!=null)
+                    progressListener.onProgress(percentCompleted);
             }
             fileInputStream.close();
             fileInputStream = null;
@@ -167,7 +148,7 @@ public class Main {
         return true;
     }
 
-    static DownloadResult downloadFromServer(File downloadPath) {
+    static DownloadResult downloadFromServer(File downloadPath, ProgressListener progressListener) {
         Socket socket = null;
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -215,10 +196,23 @@ public class Main {
             String fileName = new String(fileNameBytes);
             File downloadedFile = new File(downloadPath, fileName);
             downloadResult.setFileName(fileName);
+
+            byte[] fileSizeBytes=new byte[Long.BYTES];
+            actuallyRead=inputStream.read(fileNameBytes);
+            if (actuallyRead!=Long.BYTES) {
+                downloadResult.setErrorCode(DownloadResult.NETWORK_ERROR);
+                return downloadResult;
+            }
+            long fileSize=ByteBuffer.wrap(fileNameBytes).getLong();
+            long totalDownloaded=0;
             fileOutputStream = new FileOutputStream(downloadedFile);
-            int oneByte;
-            while ((oneByte = inputStream.read()) != -1) {
-                fileOutputStream.write(oneByte);
+            byte[] buffer=new byte[1024];
+            while ((actuallyRead = inputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer,0,actuallyRead);
+                totalDownloaded+=actuallyRead;
+                int percentCompleted=(int)(100L*totalDownloaded/fileSize);
+                if (progressListener!=null)
+                    progressListener.onProgress(percentCompleted);
             }
             fileOutputStream.close();
             fileOutputStream = null;
@@ -233,6 +227,34 @@ public class Main {
         return downloadResult;
     }
 
+    static File getDownloadPath() {
+        while (true) {
+            System.out.println("please enter a download directory:");
+            String pathString = getUserInput();
+            if (pathString.equals("exit"))
+                return null;
+            File file = new File(pathString);
+            if (file.exists() && file.isDirectory())
+                return file;
+            System.out.println("invalid path");
+        }
+    }
+
+    static String getUserInput() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    static void exit() {
+        System.out.println("bye bye");
+        System.exit(0);
+    }
 
     static void close(Closeable... closeables) {
         for (Closeable closeable : closeables) {
