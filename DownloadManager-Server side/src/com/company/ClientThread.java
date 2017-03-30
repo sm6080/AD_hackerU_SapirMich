@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 /**
  * Created by Sapir on 29.03.2017.
@@ -63,6 +64,8 @@ public class ClientThread extends Thread {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                if (uploadedFile!=null&& uploadedFile.isLocked())
+                    uploadedFile.unlock();
         }
 
     }
@@ -104,7 +107,9 @@ public class ClientThread extends Thread {
         fileOutputStream=null;
         uploadedFile.setFileNameBytes(fileNameBytes);
         uploadedFile.increaseVersion();
+        uploadedFile.unlock();
     }
+
 
     private void download() throws IOException {
         if (uploadedFile.isLocked()) {
@@ -112,6 +117,14 @@ public class ClientThread extends Thread {
             return;
         } else
             outputStream.write(OK);
+        byte []versionBytes=new byte[4];
+        ByteBuffer.wrap(versionBytes).putInt(uploadedFile.getVersion());
+        outputStream.write(versionBytes);
+        int shouldSendFile=inputStream.read();// שהקליינט יגיד לי אם יש טעם בהורדה
+        if (shouldSendFile!=OK)
+            return;
+        outputStream.write(uploadedFile.getFileNameBytes().length);// ם הקובץ וגודלו ב- 2 השורות הלו
+        outputStream.write(uploadedFile.getFileNameBytes());
         fileInputStream = new FileInputStream(uploadedFile);
         //TODO:: reading/downloading lock
         int oneByte;

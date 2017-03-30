@@ -1,11 +1,14 @@
+/*
 package com.company;
 
 import java.io.*;
 import java.net.Socket;
 
+*/
 /**
  * Created by hackeru on 29.03.2017.
- */
+ *//*
+
 public class UploadThread extends Thread {
     public static final int UPLOAD = 101;
 
@@ -47,3 +50,4 @@ public class UploadThread extends Thread {
         }
     }
 }
+*/

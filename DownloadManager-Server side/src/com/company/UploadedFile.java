@@ -7,6 +7,8 @@ import java.io.File;
  */
 public class UploadedFile extends File  {
 
+
+
     private int version;
     private byte[] fileNameBytes;
     private boolean lock;// אם מישהו מעלה או מוריד ברגע זה
@@ -29,6 +31,9 @@ public class UploadedFile extends File  {
         version++;
     }
 
+    public int getVersion() {
+        return version;
+    }
     public void lock(){
         lock = true;
     }

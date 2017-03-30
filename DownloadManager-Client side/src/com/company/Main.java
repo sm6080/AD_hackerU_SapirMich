@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 // just for practice - not needed
 enum MenuChoice{
@@ -68,17 +69,22 @@ public class Main {
 
     static void downloadChoice( File downloadPath){
         System.out.println("downloading...");
-        String downloadedFileName;
-        if ((downloadedFileName=downloadFromServer(downloadPath))!=null){
-            System.out.println("downloaded successfully"+downloadedFileName);
+        DownloadResult downloadResult=downloadFromServer(downloadPath);
+        if (downloadResult.getErrorCode()==downloadResult.SUCCESS){
+            System.out.println("downloaded successfully"+downloadResult.getFileName());
+        } else if (downloadResult.getErrorCode()==downloadResult.NETWORK_ERROR) {
+            System.out.println("error downloading ");
+        } else if (downloadResult.getErrorCode()==downloadResult.ALREADY_HAVE_LATEST_VERSION) {
+            System.out.println("you already have latest version ");
         }else
-            System.out.println("error downloading file");
+            System.out.println("unknowm error");
     }
 
     static  boolean uploadToServer(File fileToUpload){
         Socket socket=null;
         InputStream inputStream=null;
         OutputStream outputStream=null;
+        InputStream fileInputStream=null;
         try {
             socket=new Socket(SERVER_IP,PORT);
             inputStream=socket.getInputStream();
@@ -87,12 +93,15 @@ public class Main {
             int response=inputStream.read();
             if (response!=OK)
                 return false;
-            byte []fileNameToBytes=fileToUpload.getName().getBytes();
-            outputStream.write(fileNameToBytes.length);
-            InputStream fileInputStream=new FileInputStream(fileToUpload);
+            byte []fileNameBytes=fileToUpload.getName().getBytes();
+            outputStream.write(fileNameBytes.length);
+            outputStream.write(fileNameBytes);
+            fileInputStream=new FileInputStream(fileToUpload);
             int oneByte;
             while ((oneByte=fileInputStream.read())!=-1)
                 outputStream.write(oneByte);
+            fileInputStream.close();
+            fileInputStream=null;
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
@@ -101,8 +110,70 @@ public class Main {
         return true;
     }
 
-    static String downloadFromServer(File downloadPath ){
-        return "name";
+    static DownloadResult downloadFromServer(File downloadPath){
+        Socket socket = null;
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        OutputStream fileOutputStream = null;
+        DownloadResult downloadResult = new DownloadResult();
+        try {
+            socket = new Socket(SERVER_IP, PORT);
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+            outputStream.write(DOWNLOAD);
+            int response = inputStream.read();
+            if(response != OK) {
+                downloadResult.setErrorCode(DownloadResult.NETWORK_ERROR);
+                return downloadResult;
+            }
+            byte[] versionBytes = new byte[4];
+            int actuallyRead;
+            actuallyRead = inputStream.read(versionBytes);
+            if(actuallyRead != 4){
+                downloadResult.setErrorCode(DownloadResult.NETWORK_ERROR);
+                return downloadResult;
+            }
+            int version = ByteBuffer.wrap(versionBytes).getInt();
+            if(version == existingVersion){
+                outputStream.write(FAIL);
+                outputStream.close();
+                outputStream = null;
+                downloadResult.setErrorCode(DownloadResult.ALREADY_HAVE_LATEST_VERSION);
+                return downloadResult;
+            }else{
+                outputStream.write(OK);
+            }
+
+            int fileNameLength = inputStream.read();
+            if(fileNameLength == -1){
+                downloadResult.setErrorCode(DownloadResult.NETWORK_ERROR);
+                return downloadResult;
+            }
+            byte[] fileNameBytes = new byte[fileNameLength];
+            actuallyRead = inputStream.read(fileNameBytes);
+            if(actuallyRead != fileNameLength){
+                downloadResult.setErrorCode(DownloadResult.NETWORK_ERROR);
+                return downloadResult;
+            }
+            String fileName = new String(fileNameBytes);
+            File downloadedFile = new File(downloadPath, fileName);
+            downloadResult.setFileName(fileName);
+            fileOutputStream = new FileOutputStream(downloadedFile);
+            int oneByte;
+            while((oneByte = inputStream.read()) != -1){
+                fileOutputStream.write(oneByte);
+            }
+            fileOutputStream.close();
+            fileOutputStream = null;
+            downloadResult.setErrorCode(DownloadResult.SUCCESS);
+            existingVersion=version;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            close(inputStream, outputStream, socket, fileOutputStream);
+        }
+
+        return downloadResult;
     }
 
     static void close(Closeable... closeables){
@@ -142,6 +213,39 @@ public class Main {
     static void exit(){
         System.out.println("bye bye");
         System.exit(0);
+    }
+}
+
+class DownloadResult {
+
+    public static final int SUCCESS = 0;
+    public static final int ALREADY_HAVE_LATEST_VERSION = 1;
+    public static final int NETWORK_ERROR = 2;
+
+    private int errorCode;
+    private String fileName;
+
+    public DownloadResult(){
+
+    }
+    public DownloadResult(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
 

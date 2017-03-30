@@ -1,12 +1,15 @@
+/*
 package com.company;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+*/
 /**
  * Created by Sapir on 29.03.2017.
- */
+ *//*
+
 public class DownloadThread extends Thread {
     public static final int PORT = 3000;
     public static final String SERVER_IP = "127.0.0.1";
@@ -70,3 +73,4 @@ public class DownloadThread extends Thread {
 
 
 
+*/
