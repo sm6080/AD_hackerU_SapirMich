@@ -58,6 +58,7 @@ public class Ex2 {
             begin=end+1;
         }
         addWord(word.substring(begin,length), count);
+        words.add(word);
     }
 
     private void addWord(String word, int count) {
