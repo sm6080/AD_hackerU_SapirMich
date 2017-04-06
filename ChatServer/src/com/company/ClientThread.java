@@ -1,18 +1,16 @@
 package com.company;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Sapir Michaeli on 21.03.2017.
+ * Created by eladlavi on 28/03/2017.
  */
-
-// התהליכון הזה חייב לדעת מי הם היוזרים
 public class ClientThread extends Thread {
 
     public static final int SEND_MESSAGE = 100;
@@ -21,7 +19,6 @@ public class ClientThread extends Thread {
     public static final int LOGIN = 103;
     public static final int OKAY = 90;
     public static final int FAILURE = 91;
-
     private Socket clientSocket;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -92,7 +89,7 @@ public class ClientThread extends Thread {
         if(actuallyRead != messageLength)
             return;
         String message = new String(messageBytes);
-        messages.add(new Message((user.getUserName()),message));
+        messages.add(new Message(user.getUserName(), message));
         outputStream.write(OKAY);
     }
 
@@ -107,8 +104,11 @@ public class ClientThread extends Thread {
     private boolean validUser(User user){
         if(user == null)
             return false;
-        String existingPassword = users.get(user.getUserName());
-        return existingPassword != null && existingPassword.equals(user.getPassword());
+        String existingPassword =
+                users.get(user.getUserName());
+        return existingPassword != null &&
+                existingPassword.equals(
+                        user.getPassword());
     }
 
     private void signup() throws IOException {
@@ -127,21 +127,19 @@ public class ClientThread extends Thread {
 
     private void getMessages() throws IOException {
         User user = readUserFromStream();
-        //how many unReaded messages
         if(!validUser(user))
             return;
         byte[] messageFromBytes = new byte[4];
         int actuallyRead = inputStream.read(messageFromBytes);
         if(actuallyRead != 4)
             return;
-
         int messageFrom = ByteBuffer.wrap(messageFromBytes).getInt();
         for (int i = messageFrom; i < messages.size(); i++) {
             String message = messages.get(i).getContent();
             byte[] messageBytes = message.getBytes();
             outputStream.write(messageBytes.length);
             outputStream.write(messageBytes);
-            byte [] messageSenderBytes=messages.get(i).getSender().getBytes();
+            byte[] messageSenderBytes = messages.get(i).getSender().getBytes();
             outputStream.write(messageSenderBytes.length);
             outputStream.write(messageSenderBytes);
         }
@@ -168,5 +166,4 @@ public class ClientThread extends Thread {
         user.setPassword(new String(passwordBytes));
         return user;
     }
-
 }

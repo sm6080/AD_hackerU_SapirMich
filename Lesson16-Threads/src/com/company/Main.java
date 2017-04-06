@@ -193,3 +193,77 @@ public class Main {
     }
 
 }
+
+/*
+•	יש 2 דרכים לגרום למחלקה להשתמש בThread:
+1.	לממש את Runnable ולהכיל שדה מסוג Thread
+public class MyThread implements rUNNABLE
+{
+    Thread thread;
+
+     @Override
+    public void run() {
+     System.out.println("do long running stuff");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("done doing long running stuff");
+      }
+
+
+2.	לרשת מThread  ולדרוס את run()
+public class MyThread extends Thread {
+
+    @Override
+    public void run() {
+        System.out.println("do long running stuff");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("done doing long running stuff");
+
+    }
+
+
+
+פונקציות של המחלקה THREAD
+public void start ()
+ניתן לקרוא לפונקציה הזאת רק פעם אחת על כל Thread. היא בונה Thread חדש ומצהירה שהוא מוכן להרצה. ברגע שניתן להפעיל את run(), מפעילה אותו.
+
+public void run ()
+הרצת הThread.
+
+public final void setPriority (int priority)
+קובע את הpriority  (רמת הדחיפות) של הThread.
+
+public void interrupt ()
+ממשיך את הרצת הThread אם הוא היה מורדם/מושהה.
+
+public final void join (long millisec)
+הThread שבריצתו קוראים לjoin מוותר על זמן הריצה שלו במשך milisec מילי-שניות (אם לא שולחים פרמטר פשוט מוותר עד שהתהליך השני ימות) לטובת Thread אחר שאתו הוא קרה לjoin
+למשל: t.join() התהליך שקרה לזה מחכה עד שt  ימות בשביל להמשיך לרוץ.
+
+public final boolean isAlive ()
+מחזיר האם הThread עוד חי, ז"א אם הוא עוד לא סיים את הרצתו.
+
+
+
+
+פונקציות סטטיות של המחלקה THREAD (המופעלות על מי קורה להם)
+
+public static void yield ()
+הThread שמפעיל את זה מוותר על זמן הריצה שלו לטובת Thread אחר כלשהוא באותו priority.
+
+public static void sleep (long millisec)
+מקפיא את הThread הנוכחי במשך milisec מילי-שניות.
+
+public static Thread currentThread ()
+מחזיר reference הThread שקרה למטודה.
+
+
+*/
+

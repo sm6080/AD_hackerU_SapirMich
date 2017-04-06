@@ -84,7 +84,7 @@ public class Main {
                     System.out.println("Welcome");
                     break;
                 case "2":
-                    if (logIn(bufferedReader,users))
+                    if (login(bufferedReader,users))
                         System.out.println("Congratulations!");
                     break;
                 case "3":
