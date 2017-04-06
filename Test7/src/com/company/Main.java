@@ -26,7 +26,7 @@ public class Main {
                 if (containWord(commonWord,text)) {
                     count++;
                     if (count==3)
-                        matchFound.found(3,text);
+                        matchFound.found(i,text);
                 }
             }
         }
