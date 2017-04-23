@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <script src="C:\Users\hackeru.HACKERU3\Downloads\jquery-3.2.1.min.js"></script>
+    <script>
+        function btnTest() {
+          /*  $.get("/MainServlet?action=divide&operand1=5&operand2=1",function (data,status) {
+                if(status=="success"){
+                    if (data.length>0)
+                        $("#divResult").html(data);
+                }
+            })*/
+          var test=$("#txtTest").val();
+          alert(test);
+
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to my Calculator</h1>
+    <input type="text" id="txtTest">
+    <input type="button" value="test" onclick="btnTest()">
+    <br>
+    <div id="divResult"></div>
+</body>
+</html>
