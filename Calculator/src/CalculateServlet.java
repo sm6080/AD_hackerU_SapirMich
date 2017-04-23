@@ -7,6 +7,7 @@ import java.util.Map;
  * Created by hackeru on 20.04.2017.
  */
 public class CalculateServlet extends javax.servlet.http.HttpServlet {
+    int counter=0;
 
     protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
 
@@ -57,6 +58,9 @@ public class CalculateServlet extends javax.servlet.http.HttpServlet {
                 }
                 result = String.valueOf(operand1 / operand2);
                 break;
+            case "test":
+                counter++;
+                response.getWriter().write("counter="+counter);
             default:
                 return;
         }

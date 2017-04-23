@@ -41,16 +41,19 @@
                     }
                 });
             }
-            else {
-                $("#divResult").html("error");
-            }
         }
     </script>
 </head>
 <body>
 <h1>Welcome to my Calculator</h1>
 <input type="number" id="operand1">
-<input type="text" id="action">
+<!-- <input type="text" id="action"> -->
+<select id="action">
+    <option value="add">+</option>
+    <option value="subtract">-</option>
+    <option value="multiply">*</option>
+    <option value="divide">/</option>
+</select>
 <input type="number" id="operand2">
 <input type="button" value="test" onclick="btnTest()">
 <br/>
