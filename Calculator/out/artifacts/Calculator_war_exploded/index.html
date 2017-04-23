@@ -1,28 +1,59 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Calculator</title>
-    <script src="C:\Users\hackeru.HACKERU3\Downloads\jquery-3.2.1.min.js"></script>
+    <script src="jquery-3.2.1.min.js"></script>
     <script>
         function btnTest() {
-          /*  $.get("/MainServlet?action=divide&operand1=5&operand2=1",function (data,status) {
-                if(status=="success"){
-                    if (data.length>0)
-                        $("#divResult").html(data);
-                }
-            })*/
-          var test=$("#txtTest").val();
-          alert(test);
-
+            var operand1 = $("#operand1").val();
+            var action = $("#action").val();
+            var operand2 = $("#operand2").val();
+            var flag = false;
+            switch (action) {
+                case "add":
+                    flag = true;
+                    break;
+                case "subtract":
+                    flag = true;
+                    break;
+                case "multiply":
+                    flag = true;
+                    break;
+                case "divide":
+                    flag = true;
+                    if (operand2 == 0) {
+                        $("#divResult").html("divide by zero");
+                    }
+                    else
+                        flag=true;
+                    break;
+                default:
+                    return;
+            }
+            if (flag == true) {
+                $.get("/CalculateServlet?action=" + action + "&operand1=" + operand1 + "&operand2=" + operand2, function (data, status) {
+                    if (status == "success") {
+                        if (data.length > 0) {
+                            $("#divResult").html(data);
+                        }
+                    }
+                });
+            }
+            else {
+                $("#divResult").html("error");
+            }
         }
     </script>
 </head>
 <body>
-    <h1>Welcome to my Calculator</h1>
-    <input type="text" id="txtTest">
-    <input type="button" value="test" onclick="btnTest()">
-    <br>
-    <div id="divResult"></div>
+<h1>Welcome to my Calculator</h1>
+<input type="number" id="operand1">
+<input type="text" id="action">
+<input type="number" id="operand2">
+<input type="button" value="test" onclick="btnTest()">
+<br/>
+<div id="divResult"></div>
 </body>
 </html>
