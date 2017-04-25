@@ -1,40 +1,107 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>WebChat</title>
     <script src="jquery-3.2.1.min.js"></script>
-    <script >
-        function send() {
+    <script>
+        var lastMessage=0;
+        var toPrint="";
+        var userName;
+        var password;
+        function btnsend() {
             var message=$("#send").val();
-            if (message.length>0){
-                serverTmp("send&message="+message);
+            if(message.length>0){
+                $.get("/WebChat?action=send&message="+message+"&userName="+userName+"&password"+password,function (data,status){
+                    if (status == "success" ) {
+                        if ( data!="no")
+                            $("#error").val("The message has not sent");
+                        $("#send").val();
+                    }
+                });
             }
         }
-        function serverTmp(string) {
-            $.get("/WebChat?action=" + string, function (data, status) {
+
+        function getMessages() {
+            $.get("/WebChat?action=get&lastMessage=" + lastMessage+"&userName="+userName+"&password"+password, function (data, status) {
                 if (status == "success") {
-                    if (data.length > 0) {
-                        $("#get").html(data);
+                    if (data.length > 0) { // יש תוכן
+                        if (data!="no") {
+                            printMessages(data);
+                            $("#get").append(toPrint);
+                        }else {
+                            printMessages(data);
+                            $("#error").val("error");
+                        }
+                    }
+                }
+                setTimeout(1000, getMessages());
+            });
+
+        }
+        function printMessages(message) {
+            var messages=message.split('&');
+            toPrint="";
+            for(var i=0;i<messages.length;i++,lastMessage++) {
+                toPrint += messages[i] + "<br>";
+            }
+        }
+        function sign_up() {
+            userName=$("#userName").val();
+            password=$("#password").val();
+            $.get("/WebChat?action=sign_up&userName="+userName+"&password"+password, function (data, status) {
+                if (status == "success" ) {
+                    if (data == "no") {
+                        $("#error").val("error sign_up");
                     }else
-                        $("#send").val("");
+                        $("#error").val("signed up");
                 }
             });
         }
-        function get() {
-            serverTmp("get")
 
+        function log_in() {
+            userName=$("#userName").val();
+            password=$("#password").val();
+            $.get("/WebChat?action=log_in&userName="+userName+"&password"+password, function (data, status) {
+                if (status == "success" ) {
+                    if (data == "no") {
+                        $("#error").val("error");
+                    } else
+                    $("#error").val("log in");
+                }
+            });
         }
+
+
+
     </script>
+    <style>
+        body{
+            background-color: #d2e1e6;
+        }
+        .button{
+            background-color: brown;
+        }
+    </style>‏
 </head>
-<body>
-    <h1>chatoosh</h1>
-    <input type="text" id="send">
-    <input type="button" onclick="send()" value="send">
-    <input type="button" onclick="get()" value="get">
-    <br>
-    <div id="get"></div>
-    <br>
-    <h4>made by Sapir & Maayan</h4>
+
+<body onload="getMessages()">
+<h1>Chatty</h1>
+<div id="error"></div>
+<div id="get"></div>
+<input type="text" id="send">
+<input type="button" onclick="btnsend()" value="send" class="button">
+<input type="text" value="userName" id="userName">
+<input type="text" value="password" id="password">
+<input type="button" onclick="log_in()" value="LOG IN" class="button">
+<input type="button" onclick="sign_up()" value="SIGN UP" class="button">
+<br>
+<br>
+<br>
+<img src="images/download (3).jpg" height="230" width="219"/>
+<h4>made by Sapir & Maayan</h4>
 </body>
 </html>
+
+
